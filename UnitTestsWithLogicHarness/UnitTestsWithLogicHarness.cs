@@ -1,9 +1,9 @@
-﻿using System;
+﻿
+
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
+
 
 namespace UnitTestsWithLogicHarness
 {
@@ -36,14 +36,14 @@ namespace UnitTestsWithLogicHarness
         /// not trigger any diagnsotics.
         /// </summary>
         [Fact]
-        public void EmptyTestHarness()
+        public void EmptyTestMethod()
         {
             
         }
 
 
         [Fact]
-        public void ForeachTestHarness()
+        public void ForeachTestMethod()
         {
             List<int> someNumbers = new List<int> { 1, 2, 3 };
 
@@ -55,7 +55,7 @@ namespace UnitTestsWithLogicHarness
 
 
         [Fact]
-        public void IfStatementHarness()
+        public void IfStatementMethod()
         {
             int x = 1;
 
@@ -63,6 +63,37 @@ namespace UnitTestsWithLogicHarness
             {
                 x = 3;
             }
+        }
+
+
+        /// <summary>
+        /// A test method that multiple logic statements. 
+        /// </summary>
+        [Fact]
+        public void MultipleLogicIssuesMethod_ButNoIfStatement()
+        {
+            int counter = 0;
+
+            IList<int> intList = new List<int> { 1, 2, 3 };
+
+            foreach (int val in intList)
+            {
+                /* Do something */
+            }
+
+            //do
+            //{
+            //    counter++;
+            //} while (counter != 5);
+
+            //counter = 0;
+
+            //while (counter != 5)
+            //{
+            //    counter++;
+            //}
+
+            //counter = counter == 5 ? counter = 0 : counter = 1;
         }
     }
 }
