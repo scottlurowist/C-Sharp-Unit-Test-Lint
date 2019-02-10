@@ -86,50 +86,55 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
             }
         }
 
-        public class TheSearchForIfStatementsMethod : UnitTestViolationsHarness
+
+
+        // ReSharper disable once ClassNeverInstantiated.Global
+        public class TheProcessMethodDeclarationSyntaxMethod : UnitTestViolationsHarness
         {
-            /// <summary>
-            /// Tests that when a test method has no if statements,
-            /// that the number of generated diagnostics is zero.
-            /// </summary>
-            [Fact]
-            public void MustNotProduce_AnIfStatementDiagnostic_When_TheMethodIsEmpty()
+            public class IfStatements
             {
-                // ARRANGE
-                const string methodToAnalyzeAsString = @"
+                /// <summary>
+                /// Tests that when a test method has no if statements,
+                /// that the number of generated diagnostics is zero.
+                /// </summary>
+                [Fact]
+                public void MustNotProduce_AnIfStatementDiagnostic_When_TheMethodIsEmpty()
+                {
+                    // ARRANGE
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT
-                foundDiagnostics.Count.Should().Be(NoDiagnostics);
-            }
+                    // ASSERT
+                    foundDiagnostics.Count.Should().Be(NoDiagnostics);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has a single if statement,
-            /// that the number of generated diagnostics is one, and that the 
-            /// diagnostic is an if statement diagnostic.
-            /// </summary>
-            [Fact]
-            public void MustProduceASingleIfStatementDiagnostic_When_TheMethodHasOneIfStatement()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int textSpanStart = 165;
-                const int textSpanEnd = 183;
+                /// <summary>
+                /// Tests that when a test method has a single if statement,
+                /// that the number of generated diagnostics is one, and that the 
+                /// diagnostic is an if statement diagnostic.
+                /// </summary>
+                [Fact]
+                public void MustProduceASingleIfStatementDiagnostic_When_TheMethodHasOneIfStatement()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int textSpanStart = 165;
+                    const int textSpanEnd = 183;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -138,40 +143,40 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         if (x == 0) x = 1;
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have a single diagnostic that is actually a proper if statement diagnostic.
-                foundDiagnostics.Count.Should().Be(OneDiagnostic);
+                    // ASSERT - we should have a single diagnostic that is actually a proper if statement diagnostic.
+                    foundDiagnostics.Count.Should().Be(OneDiagnostic);
 
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(textSpanStart, textSpanEnd));
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.IfStatementDescriptor);
-            }
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(textSpanStart, textSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.IfStatementDescriptor);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has two if statements,
-            /// that the number of generated diagnostics is two, and that each 
-            /// diagnostic is an if statement diagnostic.
-            /// </summary>
-            [Fact]
-            public void MustProduceTwoIfStatementDiagnostics_When_TheMethodHasTwoIfStatements()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int firstTextSpanStart = 201;
-                const int firstTextSpanEnd = 219;
-                const int secondTextSpanStart = 245;
-                const int secondTextSpanEnd = 263;
+                /// <summary>
+                /// Tests that when a test method has two if statements,
+                /// that the number of generated diagnostics is two, and that each 
+                /// diagnostic is an if statement diagnostic.
+                /// </summary>
+                [Fact]
+                public void MustProduceTwoIfStatementDiagnostics_When_TheMethodHasTwoIfStatements()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int firstTextSpanStart = 201;
+                    const int firstTextSpanEnd = 219;
+                    const int secondTextSpanStart = 245;
+                    const int secondTextSpanEnd = 263;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -182,155 +187,109 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         if (x == 1) y = 0;
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have two diagnostics that are each a proper if statement diagnostics.
-                foundDiagnostics.Count.Should().Be(TwoDiagnostics);
+                    // ASSERT - we should have two diagnostics that are each a proper if statement diagnostics.
+                    foundDiagnostics.Count.Should().Be(TwoDiagnostics);
 
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.IfStatementDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.IfStatementDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
 
-                foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.IfStatementDescriptor);
-                foundDiagnostics.Last().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                    foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.IfStatementDescriptor);
+                    foundDiagnostics.Last().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                }
+
+
+                /// <summary>
+                /// Tests that when a test method has no if statements, but other test
+                /// violations, that the number of generated diagnostics for if statements is zero.
+                /// </summary>
+                /// <param name="methodToParseAsString">
+                /// A chunk of C# method code to be parsed and analyzed for diagnostics.
+                /// </param>
+                /// <param name="friendlyDescription">
+                /// A friendly description of the code to parse. It exists only for readability
+                /// for developers reading this test method. It is not used by the test.
+                /// </param>
+                [Theory]
+                [InlineData("[Fact]SomeTestMethod(){ foreach(int val in new int[] {1,2,3}) { /* Do something */ }  }",
+                    "foreach loop")]
+                [InlineData("[Fact]SomeTestMethod(){ for(int i = 0; i < 10; i++) { /* Do something */  };  }",
+                    "for loop")]
+                [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
+                    "do while loop")]
+                public void MustNotProduce_IfStatementDiagnostics_When_TheMethod_HasNoIfStatements_ButHasOtherViolations(
+                    string methodToParseAsString, string friendlyDescription)
+                {
+                    // ARRANGE
+                    IUnitTestsViolations classUnderTest = new UnitTestViolations();
+
+
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
+
+
+                    // ASSERT
+                    foundDiagnostics.Count(diag => diag.Id == Descriptors.IfStatementDescriptor.Id)
+                        .Should().Be(NoDiagnostics);
+                }
             }
 
 
-            /// <summary>
-            /// Tests that when a test method has no if statements, but other test
-            /// violations, that the number of generated diagnostics for if statements is zero.
-            /// </summary>
-            /// <param name="methodToParseAsString">
-            /// A chunk of C# method code to be parsed and analyzed for diagnostics.
-            /// </param>
-            /// <param name="friendlyDescription">
-            /// A friendly description of the code to parse. It exists only for readability
-            /// for developers reading this test method. It is not used by the test.
-            /// </param>
-            [Theory]
-            [InlineData("[Fact]SomeTestMethod(){ foreach(int val in new int[] {1,2,3}) { /* Do something */ }  }",
-                "foreach loop")]
-            [InlineData("[Fact]SomeTestMethod(){ for(int i = 0; i < 10; i++) { /* Do something */  };  }",
-                "for loop")]
-            [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
-                "do while loop")]
-            public void MustNotProduce_IfStatementDiagnostics_When_TheMethod_HasNoIfStatements_ButHasOtherViolations(
-                string methodToParseAsString, string friendlyDescription)
+
+            public class ForEachStatements
             {
-                // ARRANGE
-                IUnitTestsViolations classUnderTest = new UnitTestViolations();
-
-
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
-
-
-                // ASSERT
-                foundDiagnostics.Count(diag => diag.Id == Descriptors.IfStatementDescriptor.Id)
-                    .Should().Be(NoDiagnostics);
-            }
-        }
-
-
-        public class TheSearchForForEachStatementsMethod : UnitTestViolationsHarness
-        {
-            /// <summary>
-            /// Tests that when a test method has no foreach statements,
-            /// that the number of generated diagnostics is zero.
-            /// </summary>
-            [Fact]
-            public void MustNotProduce_AForeachStatementDiagnostic_When_TheMethodIsEmpty()
-            {
-                // ARRANGE
-                const string methodToAnalyzeAsString = @"
+                /// <summary>
+                /// Tests that when a test method has no foreach statements,
+                /// that the number of generated diagnostics is zero.
+                /// </summary>
+                [Fact]
+                public void MustNotProduce_AForeachStatementDiagnostic_When_TheMethodIsEmpty()
+                {
+                    // ARRANGE
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT
-                foundDiagnostics.Count.Should().Be(NoDiagnostics);
-            }
+                    // ASSERT
+                    foundDiagnostics.Count.Should().Be(NoDiagnostics);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has a single foreach statement,
-            /// that the number of generated diagnostics is one, and that the 
-            /// diagnostic is a foreach statement diagnostic.
-            /// </summary>
-            [Fact]
-            public void MustProduceASingleForeachStatementDiagnostic_When_TheMethodHasOneForeachStatement()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int textSpanStart = 204;
-                const int textSpanEnd = 337;
+                /// <summary>
+                /// Tests that when a test method has a single foreach statement,
+                /// that the number of generated diagnostics is one, and that the 
+                /// diagnostic is a foreach statement diagnostic.
+                /// </summary>
+                [Fact]
+                public void MustProduceASingleForeachStatementDiagnostic_When_TheMethodHasOneForeachStatement()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int textSpanStart = 204;
+                    const int textSpanEnd = 337;
 
-                const string methodToAnalyzeAsString = @"
-                    [Fact]
-                    public void SomeTestMethod()
-                    {
-                        IList<int> listOfInt = new List<int> {1,2,3,4,5};
-
-                        foreach (var item in listOfInt)
-                        {
-                            /* Do something */
-                        }
-                    }";
-
-
-                UnitTestViolations classUnderTest = new UnitTestViolations();
-
-
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
-
-
-                // ASSERT - we should have a single diagnostic that is actually a proper foreach statement diagnostic.
-                foundDiagnostics.Count.Should().Be(OneDiagnostic);
-
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.ForeachStatementDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(textSpanStart, textSpanEnd));
-            }
-
-
-            /// <summary>
-            /// Tests that when a test method has two foreach statements,
-            /// that the number of generated diagnostics is two, and that each 
-            /// diagnostic is a foreach statement diagnostic.
-            /// 
-            /// </summary>
-            [Fact]
-            public void MustProduceTwoForeachStatementDiagnostics_When_TheMethodHasTwoForeachStatements()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int firstTextSpanStart = 204;
-                const int firstTextSpanEnd = 337;
-                const int secondTextSpanStart = 365;
-                const int secondTextSpanEnd = 498;
-
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -340,6 +299,53 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         {
                             /* Do something */
                         }
+                    }";
+
+
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
+
+
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+
+
+                    // ASSERT - we should have a single diagnostic that is actually a proper foreach statement diagnostic.
+                    foundDiagnostics.Count.Should().Be(OneDiagnostic);
+
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.ForeachStatementDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(textSpanStart, textSpanEnd));
+                }
+
+
+                /// <summary>
+                /// Tests that when a test method has two foreach statements,
+                /// that the number of generated diagnostics is two, and that each 
+                /// diagnostic is a foreach statement diagnostic.
+                /// 
+                /// </summary>
+                [Fact]
+                public void MustProduceTwoForeachStatementDiagnostics_When_TheMethodHasTwoForeachStatements()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int firstTextSpanStart = 204;
+                    const int firstTextSpanEnd = 337;
+                    const int secondTextSpanStart = 365;
+                    const int secondTextSpanEnd = 498;
+
+                    const string methodToAnalyzeAsString = @"
+                    [Fact]
+                    public void SomeTestMethod()
+                    {
+                        IList<int> listOfInt = new List<int> {1,2,3,4,5};
+
+                        foreach (var item in listOfInt)
+                        {
+                            /* Do something */
+                        }
 
                         foreach (var item in listOfInt)
                         {
@@ -347,108 +353,109 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         }
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have two diagnostics that are each a proper foreach statement diagnostics.
-                foundDiagnostics.Count.Should().Be(TwoDiagnostics);
+                    // ASSERT - we should have two diagnostics that are each a proper foreach statement diagnostics.
+                    foundDiagnostics.Count.Should().Be(TwoDiagnostics);
 
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.ForeachStatementDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.ForeachStatementDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
 
-                foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.ForeachStatementDescriptor);
-                foundDiagnostics.Last().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                    foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.ForeachStatementDescriptor);
+                    foundDiagnostics.Last().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                }
+
+
+                /// <summary>
+                /// Tests that when a test method has no foreach statements, but other test
+                /// violations, that the number of generated diagnostics for foreach statements is zero.
+                /// </summary>
+                /// <param name="methodToParseAsString">
+                /// A chunk of C# method code to be parsed and analyzed for diagnostics.
+                /// </param>
+                /// <param name="friendlyDescription">
+                /// A friendly description of the code to parse. It exists only for readability
+                /// for developers reading this test method. It is not used by the test.
+                /// </param>
+                [Theory]
+                [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
+                    "foreach loop")]
+                [InlineData("[Fact]SomeTestMethod(){ for(int i = 0; i < 10; i++) { /* Do something */  };  }",
+                    "for loop")]
+                [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
+                    "do while loop")]
+                public void MustNotProduce_ForeachStatementDiagnostics_When_TheMethod_HasNoForeachStatements_ButHasOtherViolations(
+                    string methodToParseAsString, string friendlyDescription)
+                {
+                    // ARRANGE
+                    IUnitTestsViolations classUnderTest = new UnitTestViolations();
+
+
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
+
+
+                    // ASSERT
+                    foundDiagnostics.Count(diag => diag.Id == Descriptors.ForeachStatementDescriptor.Id)
+                        .Should().Be(NoDiagnostics);
+                }
             }
 
 
-            /// <summary>
-            /// Tests that when a test method has no foreach statements, but other test
-            /// violations, that the number of generated diagnostics for foreach statements is zero.
-            /// </summary>
-            /// <param name="methodToParseAsString">
-            /// A chunk of C# method code to be parsed and analyzed for diagnostics.
-            /// </param>
-            /// <param name="friendlyDescription">
-            /// A friendly description of the code to parse. It exists only for readability
-            /// for developers reading this test method. It is not used by the test.
-            /// </param>
-            [Theory]
-            [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
-                "foreach loop")]
-            [InlineData("[Fact]SomeTestMethod(){ for(int i = 0; i < 10; i++) { /* Do something */  };  }",
-                "for loop")]
-            [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
-                "do while loop")]
-            public void MustNotProduce_ForeachStatementDiagnostics_When_TheMethod_HasNoForeachStatements_ButHasOtherViolations(
-                string methodToParseAsString, string friendlyDescription)
+
+            public class MagicNumbers
             {
-                // ARRANGE
-                IUnitTestsViolations classUnderTest = new UnitTestViolations();
-
-
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
-
-
-                // ASSERT
-                foundDiagnostics.Count(diag => diag.Id == Descriptors.ForeachStatementDescriptor.Id)
-                    .Should().Be(NoDiagnostics);
-            }
-        }
-
-
-        public class TheSearchForMagicNumbersMethod : UnitTestViolationsHarness
-        {
-            /// <summary>
-            /// Tests that when a test method has no magic numbers,
-            /// that the number of generated diagnostics is zero.
-            /// </summary>
-            [Fact]
-            public void MustNotProduce_AMagicNumberDiagnostic_When_TheMethodIsEmpty()
-            {
-                // ARRANGE
-                const string methodToAnalyzeAsString = @"
+                /// <summary>
+                /// Tests that when a test method has no magic numbers,
+                /// that the number of generated diagnostics is zero.
+                /// </summary>
+                [Fact]
+                public void MustNotProduce_AMagicNumberDiagnostic_When_TheMethodIsEmpty()
+                {
+                    // ARRANGE
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT
-                foundDiagnostics.Count.Should().Be(NoDiagnostics);
-            }
+                    // ASSERT
+                    foundDiagnostics.Count.Should().Be(NoDiagnostics);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has a single magic number,
-            /// that the number of generated diagnostics is one, and that the 
-            /// diagnostic is a magic number diagnostic.
-            /// </summary>
-            [Fact]
-            public void MustProduceASingleMagicNumberDiagnostic_When_TheMethodHasOneMagicNumber()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int textSpanStart = 246;
-                const int textSpanEnd = 247;
+                /// <summary>
+                /// Tests that when a test method has a single magic number,
+                /// that the number of generated diagnostics is one, and that the 
+                /// diagnostic is a magic number diagnostic.
+                /// </summary>
+                [Fact]
+                public void MustProduceASingleMagicNumberDiagnostic_When_TheMethodHasOneMagicNumber()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int textSpanStart = 246;
+                    const int textSpanEnd = 247;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -457,41 +464,41 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         IEnumerable<int> foo = listOfInt.Skip(1);
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have a single diagnostic that is actually a proper magic number diagnostic.
-                foundDiagnostics.Count.Should().Be(OneDiagnostic);
+                    // ASSERT - we should have a single diagnostic that is actually a proper magic number diagnostic.
+                    foundDiagnostics.Count.Should().Be(OneDiagnostic);
 
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.MagicNumberDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(textSpanStart, textSpanEnd));
-            }
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.MagicNumberDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(textSpanStart, textSpanEnd));
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has two magic numbers,
-            /// that the number of generated diagnostics is two, and that each 
-            /// diagnostic is a magic number diagnostic.
-            /// 
-            /// </summary>
-            [Fact]
-            public void MustProduceTwoMagicNumberDiagnostics_When_TheMethodHasTwoMagicNumbers()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int firstTextSpanStart = 247;
-                const int firstTextSpanEnd = 248;
-                const int secondTextSpanStart = 255;
-                const int secondTextSpanEnd = 256;
+                /// <summary>
+                /// Tests that when a test method has two magic numbers,
+                /// that the number of generated diagnostics is two, and that each 
+                /// diagnostic is a magic number diagnostic.
+                /// 
+                /// </summary>
+                [Fact]
+                public void MustProduceTwoMagicNumberDiagnostics_When_TheMethodHasTwoMagicNumbers()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int firstTextSpanStart = 247;
+                    const int firstTextSpanEnd = 248;
+                    const int secondTextSpanStart = 255;
+                    const int secondTextSpanEnd = 256;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -500,155 +507,109 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         IEnumerable<int> foo = listOfInt.Skip(1).Take(1);
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have two diagnostics that are each a proper magic number diagnostics.
-                foundDiagnostics.Count.Should().Be(TwoDiagnostics);
+                    // ASSERT - we should have two diagnostics that are each a proper magic number diagnostics.
+                    foundDiagnostics.Count.Should().Be(TwoDiagnostics);
 
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.MagicNumberDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.MagicNumberDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
 
-                foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.MagicNumberDescriptor);
-                foundDiagnostics.Last().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                    foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.MagicNumberDescriptor);
+                    foundDiagnostics.Last().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                }
+
+
+                /// <summary>
+                /// Tests that when a test method has no magic numbers, but other test
+                /// violations, that the number of generated diagnostics for magic numbers is zero.
+                /// </summary>
+                /// <param name="methodToParseAsString">
+                /// A chunk of C# method code to be parsed and analyzed for diagnostics.
+                /// </param>
+                /// <param name="friendlyDescription">
+                /// A friendly description of the code to parse. It exists only for readability
+                /// for developers reading this test method. It is not used by the test.
+                /// </param>
+                [Theory]
+                [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
+                    "foreach loop")]
+                [InlineData("[Fact]SomeTestMethod(){ for(int i = 0; i < 10; i++) { /* Do something */  };  }",
+                    "for loop")]
+                [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
+                    "do while loop")]
+                public void MustNotProduce_MagicNumberDiagnostics_When_TheMethod_HasNoMagicNumbers_ButHasOtherViolations(
+                    string methodToParseAsString, string friendlyDescription)
+                {
+                    // ARRANGE
+                    IUnitTestsViolations classUnderTest = new UnitTestViolations();
+
+
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
+
+
+                    // ASSERT
+                    foundDiagnostics.Count(diag => diag.Id == Descriptors.MagicNumberDescriptor.Id)
+                        .Should().Be(NoDiagnostics);
+                }
             }
 
 
-            /// <summary>
-            /// Tests that when a test method has no magic numbers, but other test
-            /// violations, that the number of generated diagnostics for magic numbers is zero.
-            /// </summary>
-            /// <param name="methodToParseAsString">
-            /// A chunk of C# method code to be parsed and analyzed for diagnostics.
-            /// </param>
-            /// <param name="friendlyDescription">
-            /// A friendly description of the code to parse. It exists only for readability
-            /// for developers reading this test method. It is not used by the test.
-            /// </param>
-            [Theory]
-            [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
-                "foreach loop")]
-            [InlineData("[Fact]SomeTestMethod(){ for(int i = 0; i < 10; i++) { /* Do something */  };  }",
-                "for loop")]
-            [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
-                "do while loop")]
-            public void MustNotProduce_MagicNumberDiagnostics_When_TheMethod_HasNoMagicNumbers_ButHasOtherViolations(
-                string methodToParseAsString, string friendlyDescription)
+
+            public class TryCatchStatements
             {
-                // ARRANGE
-                IUnitTestsViolations classUnderTest = new UnitTestViolations();
-
-
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
-
-
-                // ASSERT
-                foundDiagnostics.Count(diag => diag.Id == Descriptors.MagicNumberDescriptor.Id)
-                    .Should().Be(NoDiagnostics);
-            }
-        }
-
-
-        public class TheSearchForTryCatchStatementsMethod : UnitTestViolationsHarness
-        {
-            /// <summary>
-            /// Tests that when a test method has no try/catch statements,
-            /// that the number of generated diagnostics is zero.
-            /// </summary>
-            [Fact]
-            public void MustNotProduce_ATryCatchStatementDiagnostic_When_TheMethodIsEmpty()
-            {
-                // ARRANGE
-                const string methodToAnalyzeAsString = @"
+                /// <summary>
+                /// Tests that when a test method has no try/catch statements,
+                /// that the number of generated diagnostics is zero.
+                /// </summary>
+                [Fact]
+                public void MustNotProduce_ATryCatchStatementDiagnostic_When_TheMethodIsEmpty()
+                {
+                    // ARRANGE
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT
-                foundDiagnostics.Count.Should().Be(NoDiagnostics);
-            }
+                    // ASSERT
+                    foundDiagnostics.Count.Should().Be(NoDiagnostics);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has a single try/catch statement,
-            /// that the number of generated diagnostics is one, and that the 
-            /// diagnostic is a try/catch statement diagnostic.
-            /// </summary>
-            [Fact]
-            public void MustProduceASingleTryCatchStatementDiagnostic_When_TheMethodHasOneTryCatchStatement()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int textSpanStart = 127;
-                const int textSpanEnd = 381;
+                /// <summary>
+                /// Tests that when a test method has a single try/catch statement,
+                /// that the number of generated diagnostics is one, and that the 
+                /// diagnostic is a try/catch statement diagnostic.
+                /// </summary>
+                [Fact]
+                public void MustProduceASingleTryCatchStatementDiagnostic_When_TheMethodHasOneTryCatchStatement()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int textSpanStart = 127;
+                    const int textSpanEnd = 381;
 
-                const string methodToAnalyzeAsString = @"
-                    [Fact]
-                    public void SomeTestMethod()
-                    {
-                        try
-                        {
-                            /* Do Something */
-                        }
-                        catch(Exception excp)
-                        {
-                            /* Do Something */
-                        }
-                    }";
-
-                UnitTestViolations classUnderTest = new UnitTestViolations();
-
-
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
-
-
-                // ASSERT - we should have a single diagnostic that is actually a proper try/catch statement diagnostic.
-                foundDiagnostics.Count.Should().Be(OneDiagnostic);
-
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(TextSpan.FromBounds(textSpanStart, textSpanEnd));
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.TryCatchStatementDescriptor);
-            }
-
-
-            /// <summary>
-            /// Tests that when a test method has two try/catch statements,
-            /// that the number of generated diagnostics is two, and that each 
-            /// diagnostic is a try/catch statement diagnostic.
-            /// 
-            /// </summary>
-            [Fact]
-            public void MustProduceTwoTryCatchStatementDiagnostics_When_TheMethodHasTwoTryCatchStatements()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int firstTextSpanStart = 127;
-                const int firstTextSpanEnd = 381;
-                const int secondTextSpanStart = 409;
-                const int secondTextSpanEnd = 663;
-
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -660,6 +621,53 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         {
                             /* Do Something */
                         }
+                    }";
+
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
+
+
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+
+
+                    // ASSERT - we should have a single diagnostic that is actually a proper try/catch statement diagnostic.
+                    foundDiagnostics.Count.Should().Be(OneDiagnostic);
+
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(TextSpan.FromBounds(textSpanStart, textSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.TryCatchStatementDescriptor);
+                }
+
+
+                /// <summary>
+                /// Tests that when a test method has two try/catch statements,
+                /// that the number of generated diagnostics is two, and that each 
+                /// diagnostic is a try/catch statement diagnostic.
+                /// 
+                /// </summary>
+                [Fact]
+                public void MustProduceTwoTryCatchStatementDiagnostics_When_TheMethodHasTwoTryCatchStatements()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int firstTextSpanStart = 127;
+                    const int firstTextSpanEnd = 381;
+                    const int secondTextSpanStart = 409;
+                    const int secondTextSpanEnd = 663;
+
+                    const string methodToAnalyzeAsString = @"
+                    [Fact]
+                    public void SomeTestMethod()
+                    {
+                        try
+                        {
+                            /* Do Something */
+                        }
+                        catch(Exception excp)
+                        {
+                            /* Do Something */
+                        }
 
                         try
                         {
@@ -671,109 +679,110 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         }
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have two diagnostics that are each a proper try/catch statement diagnostics.
-                foundDiagnostics.Count.Should().Be(TwoDiagnostics);
+                    // ASSERT - we should have two diagnostics that are each a proper try/catch statement diagnostics.
+                    foundDiagnostics.Count.Should().Be(TwoDiagnostics);
 
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.TryCatchStatementDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.TryCatchStatementDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
 
-                foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.TryCatchStatementDescriptor);
-                foundDiagnostics.Last().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                    foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.TryCatchStatementDescriptor);
+                    foundDiagnostics.Last().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                }
+
+
+                /// <summary>
+                /// Tests that when a test method has no try/catch statements, but other test
+                /// violations, that the number of generated diagnostics for try/catch statements is zero.
+                /// </summary>
+                /// <param name="methodToParseAsString">
+                /// A chunk of C# method code to be parsed and analyzed for diagnostics.
+                /// </param>
+                /// <param name="friendlyDescription">
+                /// A friendly description of the code to parse. It exists only for readability
+                /// for developers reading this test method. It is not used by the test.
+                /// </param>
+                [Theory]
+                [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
+                    "foreach loop")]
+                [InlineData("[Fact]SomeTestMethod(){ for(int i = 0; i < 10; i++) { /* Do something */  };  }",
+                    "for loop")]
+                [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
+                    "do while loop")]
+                public void MustNotProduce_TryCatchStatementDiagnostics_When_TheMethod_HasNoTryCatchStatements_ButHasOtherViolations(
+                    string methodToParseAsString, string friendlyDescription)
+                {
+                    // ARRANGE
+                    IUnitTestsViolations classUnderTest = new UnitTestViolations();
+
+
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
+
+
+                    // ASSERT
+                    foundDiagnostics.Count(diag => diag.Id == Descriptors.TryCatchStatementDescriptor.Id)
+                        .Should().Be(NoDiagnostics);
+                }
             }
 
 
-            /// <summary>
-            /// Tests that when a test method has no try/catch statements, but other test
-            /// violations, that the number of generated diagnostics for try/catch statements is zero.
-            /// </summary>
-            /// <param name="methodToParseAsString">
-            /// A chunk of C# method code to be parsed and analyzed for diagnostics.
-            /// </param>
-            /// <param name="friendlyDescription">
-            /// A friendly description of the code to parse. It exists only for readability
-            /// for developers reading this test method. It is not used by the test.
-            /// </param>
-            [Theory]
-            [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
-                "foreach loop")]
-            [InlineData("[Fact]SomeTestMethod(){ for(int i = 0; i < 10; i++) { /* Do something */  };  }",
-                "for loop")]
-            [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
-                "do while loop")]
-            public void MustNotProduce_TryCatchStatementDiagnostics_When_TheMethod_HasNoTryCatchStatements_ButHasOtherViolations(
-                string methodToParseAsString, string friendlyDescription)
+
+            public class ForLoopStatements
             {
-                // ARRANGE
-                IUnitTestsViolations classUnderTest = new UnitTestViolations();
-
-
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
-
-
-                // ASSERT
-                foundDiagnostics.Count(diag => diag.Id == Descriptors.TryCatchStatementDescriptor.Id)
-                    .Should().Be(NoDiagnostics);
-            }
-        }
-
-
-        public class TheSearchForForLoopsMethod : UnitTestViolationsHarness
-        {
-            /// <summary>
-            /// Tests that when a test method has no for loop statements,
-            /// that the number of generated diagnostics is zero.
-            /// </summary>
-            [Fact]
-            public void MustNotProduce_AForLoopStatementDiagnostic_When_TheMethodIsEmpty()
-            {
-                // ARRANGE
-                const string methodToAnalyzeAsString = @"
+                /// <summary>
+                /// Tests that when a test method has no for loop statements,
+                /// that the number of generated diagnostics is zero.
+                /// </summary>
+                [Fact]
+                public void MustNotProduce_AForLoopStatementDiagnostic_When_TheMethodIsEmpty()
+                {
+                    // ARRANGE
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT
-                foundDiagnostics.Count.Should().Be(NoDiagnostics);
-            }
+                    // ASSERT
+                    foundDiagnostics.Count.Should().Be(NoDiagnostics);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has a for loop statement,
-            /// that the number of generated diagnostics is one, and that the 
-            /// diagnostic is a for loop statement diagnostic.
-            /// </summary>
-            [Fact]
-            public void MustProduceASingleForLoopStatementDiagnostic_When_TheMethodHasOneForLoopStatement()
-            {
-                // ARRANGE                
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int textSpanStart = 127;
-                const int textSpanEnd = 273;
+                /// <summary>
+                /// Tests that when a test method has a for loop statement,
+                /// that the number of generated diagnostics is one, and that the 
+                /// diagnostic is a for loop statement diagnostic.
+                /// </summary>
+                [Fact]
+                public void MustProduceASingleForLoopStatementDiagnostic_When_TheMethodHasOneForLoopStatement()
+                {
+                    // ARRANGE                
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int textSpanStart = 127;
+                    const int textSpanEnd = 273;
 
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -783,41 +792,41 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         }
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have a single diagnostic that is actually a proper for loop statement diagnostic.
-                foundDiagnostics.Count.Should().Be(OneDiagnostic);
+                    // ASSERT - we should have a single diagnostic that is actually a proper for loop statement diagnostic.
+                    foundDiagnostics.Count.Should().Be(OneDiagnostic);
 
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(TextSpan.FromBounds(textSpanStart, textSpanEnd));
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.ForLoopStatementDescriptor);
-            }
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(TextSpan.FromBounds(textSpanStart, textSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.ForLoopStatementDescriptor);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has two for loop statements,
-            /// that the number of generated diagnostics is two, and that each 
-            /// diagnostic is a for loop statement diagnostic.
-            /// 
-            /// </summary>
-            // TODO: Write another unit test with nested loops. Do this for all logic tests.
-            [Fact]
-            public void MustProduceTwoForLoopStatementDiagnostics_When_TheMethodHasTwoForLoopStatements()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int firstTextSpanStart = 127;
-                const int firstTextSpanEnd = 272;
-                const int secondTextSpanStart = 300;
-                const int secondTextSpanEnd = 446;
+                /// <summary>
+                /// Tests that when a test method has two for loop statements,
+                /// that the number of generated diagnostics is two, and that each 
+                /// diagnostic is a for loop statement diagnostic.
+                /// 
+                /// </summary>
+                // TODO: Write another unit test with nested loops. Do this for all logic tests.
+                [Fact]
+                public void MustProduceTwoForLoopStatementDiagnostics_When_TheMethodHasTwoForLoopStatements()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int firstTextSpanStart = 127;
+                    const int firstTextSpanEnd = 272;
+                    const int secondTextSpanStart = 300;
+                    const int secondTextSpanEnd = 446;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -832,107 +841,108 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         }  
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have two diagnostics that are each a proper for loop statement diagnostics.
-                foundDiagnostics.Count.Should().Be(TwoDiagnostics);
+                    // ASSERT - we should have two diagnostics that are each a proper for loop statement diagnostics.
+                    foundDiagnostics.Count.Should().Be(TwoDiagnostics);
 
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.ForLoopStatementDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.ForLoopStatementDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
 
-                foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.ForLoopStatementDescriptor);
-                foundDiagnostics.Last().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                    foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.ForLoopStatementDescriptor);
+                    foundDiagnostics.Last().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                }
+
+
+                /// <summary>
+                /// Tests that when a test method has no for loop statements, but other test
+                /// violations, that the number of generated diagnostics for for loop statements is zero.
+                /// </summary>
+                /// <param name="methodToParseAsString">
+                /// A chunk of C# method code to be parsed and analyzed for diagnostics.
+                /// </param>
+                /// <param name="friendlyDescription">
+                /// A friendly description of the code to parse. It exists only for readability
+                /// for developers reading this test method. It is not used by the test.
+                /// </param>
+                // TODO: Each instance of this type of test must include all diagnostics.
+                [Theory]
+                [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
+                    "foreach loop")]
+                [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
+                    "do while loop")]
+                public void MustNotProduce_ForLoopStatementDiagnostics_When_TheMethod_HasNoForLoopStatements_ButHasOtherViolations(
+                    string methodToParseAsString, string friendlyDescription)
+                {
+                    // ARRANGE
+                    IUnitTestsViolations classUnderTest = new UnitTestViolations();
+
+
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
+
+
+                    // ASSERT
+                    foundDiagnostics.Count(diag => diag.Id == Descriptors.ForLoopStatementDescriptor.Id)
+                        .Should().Be(NoDiagnostics);
+                }
             }
 
 
-            /// <summary>
-            /// Tests that when a test method has no for loop statements, but other test
-            /// violations, that the number of generated diagnostics for for loop statements is zero.
-            /// </summary>
-            /// <param name="methodToParseAsString">
-            /// A chunk of C# method code to be parsed and analyzed for diagnostics.
-            /// </param>
-            /// <param name="friendlyDescription">
-            /// A friendly description of the code to parse. It exists only for readability
-            /// for developers reading this test method. It is not used by the test.
-            /// </param>
-            // TODO: Each instance of this type of test must include all diagnostics.
-            [Theory]
-            [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
-                "foreach loop")]
-            [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
-                "do while loop")]
-            public void MustNotProduce_ForLoopStatementDiagnostics_When_TheMethod_HasNoForLoopStatements_ButHasOtherViolations(
-                string methodToParseAsString, string friendlyDescription)
+
+            public class WhileLoopStatements
             {
-                // ARRANGE
-                IUnitTestsViolations classUnderTest = new UnitTestViolations();
-
-
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
-
-
-                // ASSERT
-                foundDiagnostics.Count(diag => diag.Id == Descriptors.ForLoopStatementDescriptor.Id)
-                    .Should().Be(NoDiagnostics);
-            }
-        }
-
-
-        public class TheSearchForWhileLoopsMethod : UnitTestViolationsHarness
-        {
-            /// <summary>
-            /// Tests that when a test method has no while loop statements,
-            /// that the number of generated diagnostics is zero.
-            /// </summary>
-            [Fact]
-            public void MustNotProduce_AWhileLoopStatementDiagnostic_When_TheMethodIsEmpty()
-            {
-                // ARRANGE
-                const string methodToAnalyzeAsString = @"
+                /// <summary>
+                /// Tests that when a test method has no while loop statements,
+                /// that the number of generated diagnostics is zero.
+                /// </summary>
+                [Fact]
+                public void MustNotProduce_AWhileLoopStatementDiagnostic_When_TheMethodIsEmpty()
+                {
+                    // ARRANGE
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT
-                foundDiagnostics.Count.Should().Be(NoDiagnostics);
-            }
+                    // ASSERT
+                    foundDiagnostics.Count.Should().Be(NoDiagnostics);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has a while loop statement,
-            /// that the number of generated diagnostics is one, and that the 
-            /// diagnostic is a while loop statement diagnostic.
-            /// </summary>
-            [Fact]
-            public void MustProduceASingleWhileLoopStatementDiagnostic_When_TheMethodHasOneWhileLoopStatement()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int textSpanStart = 127;
-                const int textSpanEnd = 242;
+                /// <summary>
+                /// Tests that when a test method has a while loop statement,
+                /// that the number of generated diagnostics is one, and that the 
+                /// diagnostic is a while loop statement diagnostic.
+                /// </summary>
+                [Fact]
+                public void MustProduceASingleWhileLoopStatementDiagnostic_When_TheMethodHasOneWhileLoopStatement()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int textSpanStart = 127;
+                    const int textSpanEnd = 242;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -942,41 +952,41 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         }
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have a single diagnostic that is actually a proper while loop statement diagnostic.
-                foundDiagnostics.Count.Should().Be(OneDiagnostic);
+                    // ASSERT - we should have a single diagnostic that is actually a proper while loop statement diagnostic.
+                    foundDiagnostics.Count.Should().Be(OneDiagnostic);
 
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(TextSpan.FromBounds(textSpanStart, textSpanEnd));
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.WhileLoopStatementDescriptor);
-            }
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(TextSpan.FromBounds(textSpanStart, textSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.WhileLoopStatementDescriptor);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has two while loop statements,
-            /// that the number of generated diagnostics is two, and that each 
-            /// diagnostic is a while loop statement diagnostic.
-            /// 
-            /// </summary>
-            // TODO: Write another unit test with nested loops. Do this for all logic tests.
-            [Fact]
-            public void MustProduceTwoWhileLoopStatementDiagnostics_When_TheMethodHasTwoWhileLoopStatements()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int firstTextSpanStart = 127;
-                const int firstTextSpanEnd = 242;
-                const int secondTextSpanStart = 270;
-                const int secondTextSpanEnd = 385;
+                /// <summary>
+                /// Tests that when a test method has two while loop statements,
+                /// that the number of generated diagnostics is two, and that each 
+                /// diagnostic is a while loop statement diagnostic.
+                /// 
+                /// </summary>
+                // TODO: Write another unit test with nested loops. Do this for all logic tests.
+                [Fact]
+                public void MustProduceTwoWhileLoopStatementDiagnostics_When_TheMethodHasTwoWhileLoopStatements()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int firstTextSpanStart = 127;
+                    const int firstTextSpanEnd = 242;
+                    const int secondTextSpanStart = 270;
+                    const int secondTextSpanEnd = 385;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -991,147 +1001,148 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         }  
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have two diagnostics that are each a proper while loop statement diagnostics.
-                foundDiagnostics.Count.Should().Be(TwoDiagnostics);
+                    // ASSERT - we should have two diagnostics that are each a proper while loop statement diagnostics.
+                    foundDiagnostics.Count.Should().Be(TwoDiagnostics);
 
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.WhileLoopStatementDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.WhileLoopStatementDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
 
-                foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.WhileLoopStatementDescriptor);
-                foundDiagnostics.Last().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                    foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.WhileLoopStatementDescriptor);
+                    foundDiagnostics.Last().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                }
+
+
+                /// <summary>
+                /// Tests that when a test method has no while loop statements, but other test
+                /// violations, that the number of generated diagnostics for while loop statements is zero.
+                /// </summary>
+                /// <param name="methodToParseAsString">
+                /// A chunk of C# method code to be parsed and analyzed for diagnostics.
+                /// </param>
+                /// <param name="friendlyDescription">
+                /// A friendly description of the code to parse. It exists only for readability
+                /// for developers reading this test method. It is not used by the test.
+                /// </param>
+                // TODO: Each instance of this type of test must include all diagnostics.
+                [Theory]
+                [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
+                    "foreach loop")]
+                [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
+                    "do while loop")]
+                public void MustNotProduce_WhileLoopStatementDiagnostics_When_TheMethod_HasNoWhileLoopStatements_ButHasOtherViolations(
+                    string methodToParseAsString, string friendlyDescription)
+                {
+                    // ARRANGE
+                    IUnitTestsViolations classUnderTest = new UnitTestViolations();
+
+
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
+
+
+                    // ASSERT
+                    foundDiagnostics.Count(diag => diag.Id == Descriptors.WhileLoopStatementDescriptor.Id)
+                        .Should().Be(NoDiagnostics);
+                }
             }
 
 
-            /// <summary>
-            /// Tests that when a test method has no while loop statements, but other test
-            /// violations, that the number of generated diagnostics for while loop statements is zero.
-            /// </summary>
-            /// <param name="methodToParseAsString">
-            /// A chunk of C# method code to be parsed and analyzed for diagnostics.
-            /// </param>
-            /// <param name="friendlyDescription">
-            /// A friendly description of the code to parse. It exists only for readability
-            /// for developers reading this test method. It is not used by the test.
-            /// </param>
-            // TODO: Each instance of this type of test must include all diagnostics.
-            [Theory]
-            [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
-                "foreach loop")]
-            [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
-                "do while loop")]
-            public void MustNotProduce_WhileLoopStatementDiagnostics_When_TheMethod_HasNoWhileLoopStatements_ButHasOtherViolations(
-                string methodToParseAsString, string friendlyDescription)
+
+            public class TernaryOperatorStatements
             {
-                // ARRANGE
-                IUnitTestsViolations classUnderTest = new UnitTestViolations();
-
-
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
-
-
-                // ASSERT
-                foundDiagnostics.Count(diag => diag.Id == Descriptors.WhileLoopStatementDescriptor.Id)
-                    .Should().Be(NoDiagnostics);
-            }
-        }
-
-
-        public class TheSearchForTernaryOperatorsMethod : UnitTestViolationsHarness
-        {
-            /// <summary>
-            /// Tests that when a test method has no ternary operators,
-            /// that the number of generated diagnostics is zero.
-            /// </summary>
-            [Fact]
-            public void MustNotProduce_ATernaryOperatorDiagnostic_When_TheMethodIsEmpty()
-            {
-                // ARRANGE
-                const string methodToAnalyzeAsString = @"
+                /// <summary>
+                /// Tests that when a test method has no ternary operators,
+                /// that the number of generated diagnostics is zero.
+                /// </summary>
+                [Fact]
+                public void MustNotProduce_ATernaryOperatorDiagnostic_When_TheMethodIsEmpty()
+                {
+                    // ARRANGE
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT
-                foundDiagnostics.Count.Should().Be(NoDiagnostics);
-            }
+                    // ASSERT
+                    foundDiagnostics.Count.Should().Be(NoDiagnostics);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has a ternary operator,
-            /// that the number of generated diagnostics is one, and that the 
-            /// diagnostic is a ternary operator diagnostic.
-            /// </summary>
-            [Fact]
-            public void MustProduceASingleTernaryOperatorDiagnostic_When_TheMethodHasOneTernaryOperator()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int textSpanStart = 145;
-                const int textSpanEnd = 168;
+                /// <summary>
+                /// Tests that when a test method has a ternary operator,
+                /// that the number of generated diagnostics is one, and that the 
+                /// diagnostic is a ternary operator diagnostic.
+                /// </summary>
+                [Fact]
+                public void MustProduceASingleTernaryOperatorDiagnostic_When_TheMethodHasOneTernaryOperator()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int textSpanStart = 145;
+                    const int textSpanEnd = 168;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
                         bool someResult = (1 == 2) ? true : false;
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have a single diagnostic that is actually a proper ternary operator diagnostic.
-                foundDiagnostics.Count.Should().Be(OneDiagnostic);
+                    // ASSERT - we should have a single diagnostic that is actually a proper ternary operator diagnostic.
+                    foundDiagnostics.Count.Should().Be(OneDiagnostic);
 
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(TextSpan.FromBounds(textSpanStart, textSpanEnd));
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.TernaryOperatorStatementDescriptor);
-            }
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(TextSpan.FromBounds(textSpanStart, textSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.TernaryOperatorStatementDescriptor);
+                }
 
 
-            /// <summary>
-            /// Tests that when a test method has two ternary operators,
-            /// that the number of generated diagnostics is two, and that each 
-            /// diagnostic is a ternary operator diagnostic.
-            /// </summary>
-            // TODO: Write another unit test with nested loops. Do this for all logic tests.
-            [Fact]
-            public void MustProduceTwoTernaryOperatorDiagnostics_When_TheMethodHasTwoTernaryOperators()
-            {
-                // ARRANGE
-                // These values were obtained empirically in Notepad++ by copying
-                // "methodToAnalyzeAsString" to it and obtaining the text spans.
-                const int firstTextSpanStart = 145;
-                const int firstTextSpanEnd = 168;
-                const int secondTextSpanStart = 220;
-                const int secondTextSpanEnd = 243;
+                /// <summary>
+                /// Tests that when a test method has two ternary operators,
+                /// that the number of generated diagnostics is two, and that each 
+                /// diagnostic is a ternary operator diagnostic.
+                /// </summary>
+                // TODO: Write another unit test with nested loops. Do this for all logic tests.
+                [Fact]
+                public void MustProduceTwoTernaryOperatorDiagnostics_When_TheMethodHasTwoTernaryOperators()
+                {
+                    // ARRANGE
+                    // These values were obtained empirically in Notepad++ by copying
+                    // "methodToAnalyzeAsString" to it and obtaining the text spans.
+                    const int firstTextSpanStart = 145;
+                    const int firstTextSpanEnd = 168;
+                    const int secondTextSpanStart = 220;
+                    const int secondTextSpanEnd = 243;
 
-                const string methodToAnalyzeAsString = @"
+                    const string methodToAnalyzeAsString = @"
                     [Fact]
                     public void SomeTestMethod()
                     {
@@ -1140,61 +1151,63 @@ namespace CSharpUnitTestLint.AnalyzerRules.xUnitTests
                         bool anotherResult = (1 == 2) ? true : false;  
                     }";
 
-                UnitTestViolations classUnderTest = new UnitTestViolations();
+                    UnitTestViolations classUnderTest = new UnitTestViolations();
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToAnalyzeAsString));
 
 
-                // ASSERT - we should have two diagnostics that are each a proper ternary operator diagnostics.
-                foundDiagnostics.Count.Should().Be(TwoDiagnostics);
+                    // ASSERT - we should have two diagnostics that are each a proper ternary operator diagnostics.
+                    foundDiagnostics.Count.Should().Be(TwoDiagnostics);
 
-                foundDiagnostics.First().Descriptor.Should().Be(Descriptors.TernaryOperatorStatementDescriptor);
-                foundDiagnostics.First().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
+                    foundDiagnostics.First().Descriptor.Should().Be(Descriptors.TernaryOperatorStatementDescriptor);
+                    foundDiagnostics.First().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(firstTextSpanStart, firstTextSpanEnd));
 
-                foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.TernaryOperatorStatementDescriptor);
-                foundDiagnostics.Last().Location.SourceSpan.Should().Be(
-                    TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
-            }
-
-
-            /// <summary>
-            /// Tests that when a test method has no ternary operators, but other test
-            /// violations, that the number of generated diagnostics for ternary operators is zero.
-            /// </summary>
-            /// <param name="methodToParseAsString">
-            /// A chunk of C# method code to be parsed and analyzed for diagnostics.
-            /// </param>
-            /// <param name="friendlyDescription">
-            /// A friendly description of the code to parse. It exists only for readability
-            /// for developers reading this test method. It is not used by the test.
-            /// </param>
-            // TODO: Each instance of this type of test must include all diagnostics.
-            [Theory]
-            [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
-                "foreach loop")]
-            [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
-                "do while loop")]
-            public void MustNotProduce_TernaryOperatorDiagnostics_When_TheMethod_HasNoTernaryOperrators_ButHasOtherViolations(
-                string methodToParseAsString, string friendlyDescription)
-            {
-                // ARRANGE
-                IUnitTestsViolations classUnderTest = new UnitTestViolations();
+                    foundDiagnostics.Last().Descriptor.Should().Be(Descriptors.TernaryOperatorStatementDescriptor);
+                    foundDiagnostics.Last().Location.SourceSpan.Should().Be(
+                        TextSpan.FromBounds(secondTextSpanStart, secondTextSpanEnd));
+                }
 
 
-                // ACT
-                IList<Diagnostic> foundDiagnostics = classUnderTest
-                    .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
+                /// <summary>
+                /// Tests that when a test method has no ternary operators, but other test
+                /// violations, that the number of generated diagnostics for ternary operators is zero.
+                /// </summary>
+                /// <param name="methodToParseAsString">
+                /// A chunk of C# method code to be parsed and analyzed for diagnostics.
+                /// </param>
+                /// <param name="friendlyDescription">
+                /// A friendly description of the code to parse. It exists only for readability
+                /// for developers reading this test method. It is not used by the test.
+                /// </param>
+                // TODO: Each instance of this type of test must include all diagnostics.
+                [Theory]
+                [InlineData("[Fact]SomeTestMethod(){ if(true) { /* Do something */ }  }",
+                    "foreach loop")]
+                [InlineData("[Fact]SomeTestMethod(){ do { /* Do something */  } while(true);  }",
+                    "do while loop")]
+                public void MustNotProduce_TernaryOperatorDiagnostics_When_TheMethod_HasNoTernaryOperrators_ButHasOtherViolations(
+                    string methodToParseAsString, string friendlyDescription)
+                {
+                    // ARRANGE
+                    IUnitTestsViolations classUnderTest = new UnitTestViolations();
 
 
-                // ASSERT
-                foundDiagnostics.Count(diag => diag.Id == Descriptors.TernaryOperatorStatementDescriptor.Id)
-                    .Should().Be(NoDiagnostics);
+                    // ACT
+                    IList<Diagnostic> foundDiagnostics = classUnderTest
+                        .ProcessMethodDeclarationSyntax(GetMethodDeclarationSyntaxFromParser(methodToParseAsString));
+
+
+                    // ASSERT
+                    foundDiagnostics.Count(diag => diag.Id == Descriptors.TernaryOperatorStatementDescriptor.Id)
+                        .Should().Be(NoDiagnostics);
+                }
             }
         }
+        
 
 
         public class TheGetMethodDeclarationSyntaxFromParserUtilityMethod

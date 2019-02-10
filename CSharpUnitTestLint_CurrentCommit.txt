@@ -1,0 +1,33 @@
+AnalyzerRules renamed to CSharpUnitTestLint.AnalyzerRules
+
+The solution file renamed to CSharpUnitTestLint.sln from CSharpUnitTestLintCommandLineAnalyzer.Roslyn.sln
+
+I added the Descriptors class to the AnalyzerRules project, since this is a single concern. This class currently defines 7 descriptors; IfStatementDescriptor 
+
+I added the EnhancedDiagnostic class to the drivers project. This adds extra properties to Diagnostic, requried for solution reporting.
+
+In CSharpUnitTestLintWalker, I commented the calls to check for magic numbers and foreach loops, until those analyzers are refactored with Test First Development. I also commented the check for [Theory], so that I can focus on getting analyzers written using [Fact].
+
+The walker no longer accoumulates information between invocations. It is now designed to process a single source file. This allows for better separation of concerns. That is the concern of a reporting module to aggregate results.
+
+I created a new project, CSharpUnitTestLint.SolutionAnalyzerDriver, that will contain the walker. I was trying to write a unit test for the walker, but the test would ABEND. It turns out that a Roslyn console app is created using x86, and not Any CPU. When I made my unit test x86, then the ABEND stopped. So, this should be in its own assembly.
+
+CSharpUnitTestLintWalker.cs was moved from its original project in the command line project, to the new CSharpUnitTestLint.SolutionAnalyzerDriver project. It was massively refactored due to test first development. 
+
+The actual analyzer is now injected into the walker. This is simply to reduce the amount of setiup code that would be required for each scenario. It is easier to fake the interaction with the analyzer.
+
+I added the IUnitTestViolations interface, so that it is easier to test the walker; I can have it return generic disagnostics.
+
+UnitTestViolations has been massively refactored due to Test First Development. Now, when new rules are added, they are only added here, not in the analyzer AND the walker. UnitTestViolations has a single method to call from clients. Clients don't need to know to call each specific rule.
+
+Program.cs is considered prototype code, and exists only so that I can demo what is complete. It has extensive reporting code that will be moved to a reporting module in a future commit.
+
+There are now unit test projects CSharpUnitTestLint.AnalyzerRules.xUnitTest, and CSharpUnitTestLint.SolutionAnalyzerDriver.xUnitTests.
+
+I added UnitTestUtilities.cs to the Analyzer Drive test project.
+
+NuGet Packages were updated.
+
+Added the generic method GetListOfSyntaxType<T>, to reduce the boilerplate code in the rules DLL. Everything refactored except magic numbers, because it needs an expression, not a statement.
+
+Introduced Microsoft Code Contracts.
