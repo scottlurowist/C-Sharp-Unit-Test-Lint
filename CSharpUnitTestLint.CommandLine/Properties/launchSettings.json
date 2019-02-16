@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CSharpUnitTestLint.CommandLine": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\GitRepos\\CSharpUnitTestLint\\CSharpUnitTestLint.sln"
+    }
+  }
+}

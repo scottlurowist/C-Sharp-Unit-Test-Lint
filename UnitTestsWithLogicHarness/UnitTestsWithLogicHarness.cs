@@ -81,19 +81,19 @@ namespace UnitTestsWithLogicHarness
                 /* Do something */
             }
 
-            //do
-            //{
-            //    counter++;
-            //} while (counter != 5);
+            do
+            {
+                counter++;
+            } while (counter != 5);
 
-            //counter = 0;
+            counter = 0;
 
-            //while (counter != 5)
-            //{
-            //    counter++;
-            //}
+            while (counter != 5)
+            {
+                counter++;
+            }
 
-            //counter = counter == 5 ? counter = 0 : counter = 1;
+            counter = counter == 5 ? counter = 0 : counter = 1;
         }
     }
 }
