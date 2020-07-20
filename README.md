@@ -1,6 +1,6 @@
 # C-Sharp-Unit-Test-Lint
 
-This project is a Roslyn-based Visual Astudio analyzer that acts as a LINT tool for C# unit test files.
+This project is a Roslyn-based Visual Studio analyzer that acts as a LINT tool for C# unit test files.
 
 It currently only supports xUnit. 
 
